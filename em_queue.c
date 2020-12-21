@@ -1,5 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
+
 #include "em_queue.h"
 
 
@@ -65,7 +67,7 @@ T_QUEUE_RET static enqueue_internal(Queue * p_queue,void * p_data)
 
 T_QUEUE_RET static dequeue_internal(Queue * p_queue,void * p_ret)
 {
-    if(PREDICT_FALSE( (p_queue == NULL) || (!IS_QUEUE_EMPTY(p_queue)) ) )
+    if(PREDICT_FALSE( (p_queue == NULL) || (IS_QUEUE_EMPTY(p_queue)) ) )
     {
         return E_QUEUE_EMPTY;
     }
@@ -104,7 +106,26 @@ size_t qsize(Queue * p_queue)
     return p_queue->q_size;
 }
 
-void   peek(Queue * p_queue, void * p_peek)
+bool  peek(Queue * p_queue, void * p_peek)
 {
+    if(PREDICT_FALSE( (p_queue == NULL) || (IS_QUEUE_EMPTY(p_queue)) ) )
+    {
+        return FALSE;
+    }
+    memcpy(p_peek,p_queue->front->q_data,sizeof (p_queue->q_memsize));
+    return TRUE;
+}
 
+void qdestroy(Queue *p_queue)
+{
+    if(PREDICT_FALSE(p_queue == NULL )) return;
+
+    while(!IS_QUEUE_EMPTY(p_queue))
+    {
+        ELEM *elm = p_queue->front;
+        p_queue->front = p_queue->front->q_next;
+        free(elm->q_data);
+        free(elm);
+        p_queue->q_size --;
+    }
 }

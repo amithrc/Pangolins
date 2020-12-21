@@ -4,15 +4,31 @@
 #include "em_thread.h"
 #include "em_defs.h"
 #include "em_glob.h"
-#include "em_generic_queue.h"
+#include "em_queue.h"
+
+#define EM_MAX_QUEUE 0x8
+
+/* Global queue used for the app */
+enum em_queues
+{
+    EM_GENERAL_QUEUE  = 0x0,
+    EM_UNUSED_QUEUE_1 = 0x1,
+    EM_UNUSED_QUEUE_2 = 0x2,
+    EM_UNUSED_QUEUE_3 = 0x3,
+    EM_UNUSED_QUEUE_4 = 0x4,
+    EM_UNUSED_QUEUE_5 = 0x5,
+    EM_UNUSED_QUEUE_6 = 0x6,
+    EM_UNUSED_QUEUE_7 = 0x7
+};
 
 typedef struct S_EM_GLOB{
-    /* Maximum thread data structure */
+    /* Maximum thread data structure       */
     T_EM_THREAD threads[EM_MAX_THREAD];
 #define em_threads em_glob.threads
 
-    UINT64      thread_count;
-#define em_thrd_count em_glob.thread_count
+    /* Queue list used for the application */
+    Queue       _queue_list[EM_MAX_QUEUE];
+#define queue_list em_glob._queue_list
 
 }T_EM_GLOB;
 

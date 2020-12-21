@@ -15,7 +15,6 @@ typedef enum E_QUEUE_RET {
     E_QUEUE_MEM_FAIL  = 0x4,
 }T_QUEUE_RET;
 
-
 typedef struct S_EM_ELEM
 {
 #define ELEM struct S_EM_ELEM
@@ -41,7 +40,7 @@ bool   enqueue(Queue * p_queue,void * p_data);
 bool   dequeue(Queue * p_queue,void * p_ret);
 size_t qsize(Queue * p_queue);
 void   qdestroy(Queue *p_queue);
-void   peek(Queue * p_queue, void * p_peek);
+bool   peek(Queue * p_queue, void * p_peek);
 void   qinit(Queue *p_queue,size_t q_memsize,T_LOCK_TYPE lock_type);
-void   qdump(Queue * p_queue);
+
 #endif //PANGOLINS_EM_QUEUE_H
