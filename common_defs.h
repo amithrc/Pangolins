@@ -1,5 +1,6 @@
-#ifndef PANGOLINS_EM_DEFS_H
-#define PANGOLINS_EM_DEFS_H
+#ifndef PANGOLINS_COMMON_DEFS_H
+#define PANGOLINS_COMMON_DEFS_H
+
 #include<stdbool.h>
 
 /* Unsigned  data types  */
@@ -14,22 +15,25 @@
 #define SINT32  signed int
 #define SINT64 signed long
 
+#define CHAR char
+
 #define TRUE  true
 #define FALSE false
 
 #define PREDICT_TRUE(x)   __builtin_expect (!!(x), 1)
 #define PREDICT_FALSE(x)  __builtin_expect (!!(x), 0)
 
-/* Defining lock type to use */
-typedef enum E_LOCK_TYPE
-{
+typedef enum{
     E_NO_LOCK   = 0x0,
     E_MUTX_LOCK = 0x1,
-    E_SPIN_LOCK = 0x2,
-    E_LOCK_MAX
-}T_LOCK_TYPE;
+    E_SPIN_LOCK = 0x2
+}LOCK_TYPE;
 
 #define IS_MUTX_LOCK(lock_type) ( lock_type == E_MUTX_LOCK )
 #define IS_SPIN_LOCK(lock_type) ( lock_type == E_SPIN_LOCK )
+#define IS_NO_LOCK(lock_type) ( !IS_MUTX_LOCK(lock_type) && \
+                                !IS_SPIN_LOCK(lock_type) )
 
-#endif //PANGOLINS_EM_DEFS_H
+#define DefineOptions(option_name,bit)  B_##option_name = bit , M_##option_name = ( 1 << B_##option_name)
+
+#endif //PANGOLINS_COMMON_DEFS_H
