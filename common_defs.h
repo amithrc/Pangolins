@@ -9,7 +9,7 @@
 #define UINT32 unsigned int
 #define UINT64 unsigned long
 
-/* Signed data types    */
+/* Signed data types */
 #define SINT8  singed char
 #define SINT16 sgined short
 #define SINT32  signed int
@@ -34,6 +34,8 @@ typedef enum{
 #define IS_NO_LOCK(lock_type) ( !IS_MUTX_LOCK(lock_type) && \
                                 !IS_SPIN_LOCK(lock_type) )
 
-#define DefineOptions(option_name,bit)  B_##option_name = bit , M_##option_name = ( 1 << B_##option_name)
+#define CHECK_FOR_TIME_OUT( start_time, num_secs ) ( time(0) >= ( start_time + num_secs ) )
+
+#define DefineOptions(option_name , bit)  B_##option_name = bit , M_##option_name = ( 1 << B_##option_name)
 
 #endif //PANGOLINS_COMMON_DEFS_H

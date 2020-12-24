@@ -15,21 +15,33 @@
 #include "common_defs.h"
 
 /* ==================================== Defines ============================================ */
-#define MAX_QUEUE 0x10
+#define MAX_QUEUE      0x10
 
-#define QUEUE_TAKE_LOCK(p_queue) if(IS_MUTX_LOCK(p_queue->lock_type) )                \
-                                    pthread_mutex_lock(&p_queue->lock.mutx.mutex_l);  \
-                                 else if(IS_SPIN_LOCK(p_queue->lock_type))            \
-                                    pthread_spin_lock(&p_queue->lock.spin.spin_l);    \
-                                 else                                                 \
-                                     ;
+#define TAKE_QUEUE_LOCK(p_queue) if(IS_MUTX_LOCK(p_queue->lock_type) )               \
+                                 {                                                   \
+                                   pthread_mutex_lock(&p_queue->lock.mutx.mutex_l);  \
+                                 }                                                   \
+                                 else if(IS_SPIN_LOCK(p_queue->lock_type))           \
+                                 {                                                   \
+                                   pthread_spin_lock(&p_queue->lock.spin.spin_l);    \
+                                 }                                                   \
+                                 else                                                \
+                                 {                                                   \
+                                    ;                                                \
+                                 }
 
-#define QUEUE_RELEASE_LOCK(p_queue) if(IS_MUTX_LOCK(p_queue->lock_type) )                \
-                                        pthread_mutex_unlock(&p_queue->lock.mutx.mutex_l); \
-                                    else if(IS_SPIN_LOCK(p_queue->lock_type))            \
-                                        pthread_spin_unlock(&p_queue->lock.spin.spin_l);   \
-                                    else                                                 \
-                                        ;
+#define RELEASE_QUEUE_LOCK(p_queue)  if(IS_MUTX_LOCK(p_queue->lock_type) )                \
+                                     {                                                    \
+                                       pthread_mutex_unlock(&p_queue->lock.mutx.mutex_l); \
+                                     }                                                    \
+                                     else if(IS_SPIN_LOCK(p_queue->lock_type))            \
+                                     {                                                    \
+                                       pthread_spin_unlock(&p_queue->lock.spin.spin_l);   \
+                                     }                                                    \
+                                     else                                                 \
+                                     {                                                    \
+                                        ;                                                 \
+                                     }
 
 typedef enum
 {
@@ -48,6 +60,7 @@ typedef enum
 #define IS_UNBOUNDED_QUEUE(queue_options)       ( queue_options & M_UNBOUNDED_QUEUE)
 
 #define GET_MAX_QUEUE_SIZE(p_queue) (USE_LOCK_QUEUE_MAX_ELEM(p_queue->queue_options)) ? p_queue->queue_max_elem :MAX_QUEUE_ELEM;
+#define QUEUE_IS_EMPTY(p_queue) ( p_queue->queue_size == 0x0 )
 enum E_QUEUE
 {
     UNUSED_QUEUE_0 = 0x0,
@@ -109,12 +122,13 @@ bool init_queue( QUEUE* p_queue,
 bool enqueue_elem(QUEUE* p_queue,
                   void*  p_elem );
 
-bool dequeue_elem(QUEUE* queue,
+bool dequeue_elem(QUEUE* p_queue,
                   void*  p_elem);
 
-size_t get_queue_size(QUEUE* queue);
+size_t get_queue_size(QUEUE* p_queue,bool lock);
 
-bool destroy_queue(QUEUE* queue);
+bool free_queue_elements(QUEUE* p_queue);
+bool destroy_queue(QUEUE* p_queue);
 
 
 #endif //PANGOLINS_QUEUE_H
