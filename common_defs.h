@@ -4,7 +4,7 @@
 #include<stdbool.h>
 
 /* Unsigned  data types  */
-#define UINT8  unsinged char
+#define UINT8  unsigned char
 #define UINT16 unsigned short
 #define UINT32 unsigned int
 #define UINT64 unsigned long
@@ -35,7 +35,6 @@ typedef enum{
                                 !IS_SPIN_LOCK(lock_type) )
 
 #define CHECK_FOR_TIME_OUT( start_time, num_secs ) ( time(0) >= ( start_time + num_secs ) )
-
 #define DefineOptions(option_name , bit)  B_##option_name = bit , M_##option_name = ( 1 << B_##option_name)
 
 #endif //PANGOLINS_COMMON_DEFS_H
